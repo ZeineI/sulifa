@@ -11,6 +11,7 @@ import (
 )
 
 type Storage struct {
+	Client     *mongo.Client
 	User       *mongo.Collection
 	Authorized *mongo.Collection
 }
@@ -37,19 +38,10 @@ func NewRepository(cfg *viper.Viper, logger *zap.SugaredLogger) (*Storage, error
 		return nil, errors.New(err.Error())
 	}
 
-	defer func() {
-		err = client.Disconnect(context.Background())
-		if err != nil {
-			logger.Info("Disconnect db")
-			return
-		}
+	res := &Storage{
+		User:       client.Database("sulifa").Collection("users"),
+		Authorized: client.Database("sulifa").Collection("authorized"),
+	}
 
-		logger.Info("Connection to MongoDB closed")
-	}()
-
-	var storage *Storage
-
-	storage.User = client.Database("sulifa").Collection("users")
-
-	return storage, nil
+	return res, nil
 }

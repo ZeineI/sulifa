@@ -1,4 +1,4 @@
 server:
   port: ":8080"
 db:
-  url: "mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb"
+  url: "mongodb+srv://zeine:Zeine2003@cluster0.dagtiif.mongodb.net/?retryWrites=true&w=majority"

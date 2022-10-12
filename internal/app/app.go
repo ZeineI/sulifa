@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"log"
 
 	"github.com/ZeineI/sulifa/internal/server"
@@ -19,6 +20,16 @@ func Run(cfg *viper.Viper) {
 	if err != nil {
 		log.Fatalf("MongoDB initialization error: %v", err)
 	}
+
+	defer func() {
+		err = storage.Client.Disconnect(context.Background())
+		if err != nil {
+			logger.Info("Disconnect db")
+			return
+		}
+
+		logger.Info("Connection to MongoDB closed")
+	}()
 
 	router := server.NewServer(storage, logger)
 

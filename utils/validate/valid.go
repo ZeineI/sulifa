@@ -15,11 +15,8 @@ func ValidateCreds(username, password string) error {
 }
 
 func checkUsername(name string) error {
-
-	for _, letter := range name {
-		if !isNumeric(letter) && !isAlpha(letter) {
-			return fmt.Errorf("username must contain only lowercase letters and digits")
-		}
+	if len(name) < 6 {
+		return fmt.Errorf("name must be at least 6 characters in length")
 	}
 	return nil
 }
