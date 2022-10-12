@@ -10,35 +10,46 @@ import (
 	"go.uber.org/zap"
 )
 
-func NewRepository(cfg *viper.Viper, logger *zap.SugaredLogger) (*mongo.Client, error) {
-	client, err := mongo.NewClient(options.Client().ApplyURI(cfg.GetString("database.url")))
+type Storage struct {
+	User       *mongo.Collection
+	Authorized *mongo.Collection
+}
+
+func NewRepository(cfg *viper.Viper, logger *zap.SugaredLogger) (*Storage, error) {
+
+	client, err := mongo.NewClient(options.Client().ApplyURI(cfg.GetString("db.url")))
 	if err != nil {
 		logger.Info("NewClient initialization error")
 		return nil, errors.New(err.Error())
 	}
 
 	// Create connect
-	err = client.Connect(context.TODO())
+	err = client.Connect(context.Background())
 	if err != nil {
 		logger.Info("Connection to db error")
 		return nil, errors.New(err.Error())
 	}
 
 	// Check the connection
-	err = client.Ping(context.TODO(), nil)
+	err = client.Ping(context.Background(), nil)
 	if err != nil {
 		logger.Info("Ping signal delivery error")
 		return nil, errors.New(err.Error())
 	}
 
-	err = client.Disconnect(context.TODO())
+	defer func() {
+		err = client.Disconnect(context.Background())
+		if err != nil {
+			logger.Info("Disconnect db")
+			return
+		}
 
-	if err != nil {
-		logger.Info("Disconnect db")
-		return nil, errors.New(err.Error())
-	}
+		logger.Info("Connection to MongoDB closed")
+	}()
 
-	logger.Info("Connection to MongoDB closed")
+	var storage *Storage
 
-	return client, nil
+	storage.User = client.Database("sulifa").Collection("users")
+
+	return storage, nil
 }

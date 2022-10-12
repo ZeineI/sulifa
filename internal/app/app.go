@@ -5,7 +5,7 @@ import (
 
 	"github.com/ZeineI/sulifa/internal/server"
 	"github.com/ZeineI/sulifa/internal/storage"
-	logger "github.com/ZeineI/sulifa/pkg/log"
+	logger "github.com/ZeineI/sulifa/utils/log"
 	"github.com/spf13/viper"
 )
 
