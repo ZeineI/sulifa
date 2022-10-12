@@ -1,26 +1,25 @@
 package app
 
-import "log"
+import (
+	"fmt"
+	"log"
 
-func Run(configPath string) {
+	logger "github.com/ZeineI/pkg/log"
+	"github.com/spf13/viper"
+)
+
+func Run(cfg *viper.Viper) {
 	logger, err := logger.NewLogger()
 	if err != nil {
 		log.Fatalf("Logger initialization error: %v", err)
 	}
-	cfg, err := config.NewConfig()
-	if err != nil {
-		logger.Fatal(err)
-	}
 
-	resp, err := api.GetResponse(cfg, logger)
-	if err != nil {
-		logger.Fatal(err)
-	}
+	fmt.Println(logger)
 
-	router := server.NewServer()
+	// router := server.NewServer()
 
-	if err := router.Run(cfg, logger, resp); err != nil {
-		logger.Info(err)
-		return
-	}
+	// if err := router.Run(cfg, logger, resp); err != nil {
+	// 	logger.Info(err)
+	// 	return
+	// }
 }
