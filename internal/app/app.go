@@ -31,7 +31,7 @@ func Run(cfg *viper.Viper) {
 		logger.Info("Connection to MongoDB closed")
 	}()
 
-	router := server.NewServer(storage, logger)
+	router := server.NewServer(storage, logger, cfg)
 
 	if err := router.Run(cfg); err != nil {
 		logger.Info(err)

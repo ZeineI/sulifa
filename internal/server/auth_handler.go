@@ -84,6 +84,28 @@ func (sv *Server) login(c *gin.Context) {
 		return
 	}
 
+	hexId, err := sv.storage.GetId(user.Username)
+	if err != nil {
+		sv.logger.Info(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "failed",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	signedToken, err := sv.GenerateToken(hexId.ID.String())
+	if err != nil {
+		sv.logger.Info(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "failed",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	user.Token = signedToken
+
 	if err := sv.storage.InsertLogedInUser(user); err != nil {
 		sv.logger.Info(err)
 		c.JSON(http.StatusBadRequest, gin.H{

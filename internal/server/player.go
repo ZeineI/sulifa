@@ -9,7 +9,7 @@ import (
 func (sv *Server) isAuth(username string) (*models.User, error) {
 
 	user, err := sv.storage.GetUserAuth(username)
-	if err != nil {
+	if err != nil || user.Token == "" {
 		return nil, fmt.Errorf("isAuth failed: %s", err)
 	}
 

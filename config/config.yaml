@@ -2,3 +2,6 @@ server:
   port: ":8080"
 db:
   url: "mongodb+srv://zeine:Zeine2003@cluster0.dagtiif.mongodb.net/?retryWrites=true&w=majority"
+token:
+  ttl: 25
+  accessSecret: "secret"

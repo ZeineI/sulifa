@@ -5,6 +5,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 type User struct {
 	Username string `bson:"username"`
 	Password string `bson:"password"`
+	Token    string `bson:"password"`
 }
 
 type HexId struct {

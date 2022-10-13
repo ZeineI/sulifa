@@ -10,10 +10,11 @@ import (
 type Server struct {
 	router  *gin.Engine
 	storage *storage.Storage
+	cfg     *viper.Viper
 	logger  *zap.SugaredLogger
 }
 
-func NewServer(db *storage.Storage, logger *zap.SugaredLogger) *Server {
+func NewServer(db *storage.Storage, logger *zap.SugaredLogger, cfg *viper.Viper) *Server {
 	return &Server{
 		router:  gin.Default(),
 		storage: db,
