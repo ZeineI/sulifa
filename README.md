@@ -25,5 +25,9 @@ Response: return user struct
 
 Send post request to createroom endpoint(body should contain ID who want to create a room)
 
-Server will add room and player who created the room to "rooms" collection and set up status: waiting(means need one more player)
+Server will add new room and player who created the room to "rooms" collection and set up status: waiting (means need one more player)
 Response: return room id
+
+Send post request to ощшткщщь endpoint(body should contain room ID and username who want to join a room)
+
+Server will check room if empty new and player who joined the room will be added to player2 "rooms" collection and set up status: 1 (means room is full)
