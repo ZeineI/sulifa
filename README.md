@@ -23,3 +23,7 @@ Response: return user struct
 # websockets
 
 
+Send post request to createroom endpoint(body should contain ID who want to create a room)
+
+Server will add room and player who created the room to "rooms" collection and set up status: waiting(means need one more player)
+Response: return room id

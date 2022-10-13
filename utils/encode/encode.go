@@ -11,5 +11,6 @@ func GenerateHash(password string) string {
 
 func ComparePasswordHash(pass1, pass2 string) bool {
 	passFromClient := GenerateHash(pass2)
+	fmt.Println(passFromClient, pass1)
 	return passFromClient == pass1
 }

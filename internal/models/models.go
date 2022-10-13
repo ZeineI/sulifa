@@ -1,17 +1,31 @@
 package models
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type User struct {
-	Id       int
-	Username string
-	Password string
+	Username string `bson:"username"`
+	Password string `bson:"password"`
+}
+
+type HexId struct {
+	ID primitive.ObjectID `bson:"_id"`
 }
 
 type RegisterReq struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `bson:"username"`
+	Password string `bson:"password"`
 }
 
 type LoginReq struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `bson:"username"`
+	Password string `bson:"password"`
+}
+
+type CreateRoomReq struct {
+	Username string `bson:"username"`
+}
+
+type JoinRoomReq struct {
+	Username string `bson:"username"`
+	RoomID   string `bson:"roomID"`
 }

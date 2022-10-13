@@ -1,7 +1,6 @@
 package server
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/ZeineI/sulifa/internal/models"
@@ -65,7 +64,7 @@ func (sv *Server) login(c *gin.Context) {
 		return
 	}
 
-	user, err := sv.storage.GetUser(req.Username)
+	user, err := sv.storage.GetUserByName(req.Username)
 
 	if err != nil {
 		sv.logger.Info(err)
@@ -80,7 +79,7 @@ func (sv *Server) login(c *gin.Context) {
 		sv.logger.Info(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "failed",
-			"message": errors.New("Incorrect password"),
+			"message": "Incorrect password",
 		})
 		return
 	}
