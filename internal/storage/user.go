@@ -8,7 +8,16 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (db *Storage) InsertUser(user *models.User) error {
+func (db *Storage) InsertRegisteredUser(user *models.User) error {
+	insertResult, err := db.User.InsertOne(context.Background(), user)
+	if err != nil {
+		return fmt.Errorf("Insert user: %s", err)
+	}
+	fmt.Println(insertResult.InsertedID)
+	return nil
+}
+
+func (db *Storage) InsertLogedInUser(user *models.User) error {
 	insertResult, err := db.User.InsertOne(context.Background(), user)
 	if err != nil {
 		return fmt.Errorf("Insert user: %s", err)

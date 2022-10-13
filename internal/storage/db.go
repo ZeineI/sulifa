@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -14,6 +15,7 @@ type Storage struct {
 	Client     *mongo.Client
 	User       *mongo.Collection
 	Authorized *mongo.Collection
+	Rooms      *mongo.Collection
 }
 
 func NewRepository(cfg *viper.Viper, logger *zap.SugaredLogger) (*Storage, error) {
@@ -24,15 +26,19 @@ func NewRepository(cfg *viper.Viper, logger *zap.SugaredLogger) (*Storage, error
 		return nil, errors.New(err.Error())
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+
+	defer cancel()
+
 	// Create connect
-	err = client.Connect(context.Background())
+	err = client.Connect(ctx)
 	if err != nil {
 		logger.Info("Connection to db error")
 		return nil, errors.New(err.Error())
 	}
 
 	// Check the connection
-	err = client.Ping(context.Background(), nil)
+	err = client.Ping(ctx, nil)
 	if err != nil {
 		logger.Info("Ping signal delivery error")
 		return nil, errors.New(err.Error())
@@ -41,6 +47,7 @@ func NewRepository(cfg *viper.Viper, logger *zap.SugaredLogger) (*Storage, error
 	res := &Storage{
 		User:       client.Database("sulifa").Collection("users"),
 		Authorized: client.Database("sulifa").Collection("authorized"),
+		Rooms:      client.Database("sulifa").Collection("rooms"),
 	}
 
 	return res, nil

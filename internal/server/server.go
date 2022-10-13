@@ -27,6 +27,10 @@ func (server *Server) Run(cfg *viper.Viper) error {
 	server.router.POST("/register", server.register)
 	server.router.POST("/login", server.login)
 
+	//websocket endpoints
+	server.router.POST("/createroom", server.createRoom)
+	server.router.POST("/joinroom", server.joinRoom)
+
 	//listen and serve
 	return server.router.Run(cfg.GetString("server.port"))
 }

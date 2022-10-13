@@ -2,7 +2,6 @@ package server
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/ZeineI/sulifa/internal/models"
@@ -23,7 +22,7 @@ func (sv *Server) register(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(req)
+
 	if err := validate.ValidateCreds(req.Username, req.Password); err != nil {
 		sv.logger.Info(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -38,7 +37,7 @@ func (sv *Server) register(c *gin.Context) {
 		Password: encode.GenerateHash(req.Password),
 	}
 
-	if err := sv.storage.InsertUser(user); err != nil {
+	if err := sv.storage.InsertRegisteredUser(user); err != nil {
 		sv.logger.Info(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "failed",
@@ -68,6 +67,15 @@ func (sv *Server) login(c *gin.Context) {
 
 	user, err := sv.storage.GetUser(req.Username)
 
+	if err != nil {
+		sv.logger.Info(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "failed",
+			"message": "Unregister user",
+		})
+		return
+	}
+
 	if !encode.ComparePasswordHash(user.Password, req.Password) {
 		sv.logger.Info(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -77,11 +85,11 @@ func (sv *Server) login(c *gin.Context) {
 		return
 	}
 
-	if err != nil {
+	if err := sv.storage.InsertLogedInUser(user); err != nil {
 		sv.logger.Info(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "failed",
-			"message": "Unregister user",
+			"message": err.Error(),
 		})
 		return
 	}
